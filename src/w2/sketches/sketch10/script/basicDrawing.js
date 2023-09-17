@@ -93,12 +93,12 @@ function draw() {
   point(350, 440);
   stroke(50, 100, 60);
   strokeWeight(7);
-  point(300, 450);
-  point(310, 450);
-  point(320, 450);
-  point(330, 450);
-  point(340, 450);
-  point(350, 450);
+  point(300, 440);
+  point(310, 440);
+  point(320, 440);
+  point(330, 440);
+  point(340, 440);
+  point(350, 440);
 }
 
 //https://p5js.org/ko/reference/
