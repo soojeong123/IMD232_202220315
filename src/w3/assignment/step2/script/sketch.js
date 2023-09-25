@@ -46,16 +46,16 @@ function update() {
 }
 
 function checkEdges() {
-  if (pos.x < 0) {
-    pos.x = width;
-  } else if (pos.x > width) {
-    pos.x = 0;
-  }
-  if (pos.y < 0) {
-    pos.y = height;
-  } else if (pos.y > height) {
-    pos.y = 0;
-  }
+  // if (pos.x < 0) {
+  //   pos.x = width;
+  // } else if (pos.x > width) {
+  //   pos.x = 0;
+  // }
+  // if (pos.y < 0) {
+  //   pos.y = height;
+  // } else if (pos.y > height) {
+  //   pos.y = 0;
+  // }
 }
 function display() {
   noStroke();
