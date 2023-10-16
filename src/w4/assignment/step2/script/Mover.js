@@ -1,46 +1,97 @@
 class Mover {
-  constructor(x, y, radius) {
-    //쓰고싶은 변수들을 다 적음
+  constructor(x, y, mass) {
     this.pos = createVector(x, y);
-    // this.vel = createVector(0, 0);
-    this.vel = p5.Vector.random2D();
-    this.vel.mult(2);
+    this.vel = createVector(0, 0);
     this.acc = createVector(0, 0);
-    this.radius = radius;
-    this.mass = radius ** (1 / 2); //반지름에 대한 제곱근?
+    // this.accDisplay = createVector(0, 0);
+    this.mass = mass;
+    this.radius = this.mass ** 0.5 * 10;
+    this.isHover;
+    this.isDragging;
+    this.draggingOffset;
   }
 
   applyForce(force) {
-    // force.div(this.mass);
-    let divedForce = p5.Vector.div(force, this.mass);
-    this.acc.add(divedForce);
+    let forceDiviedByMass = createVector(force.x, force.y);
+    forceDiviedByMass.div(this.mass);
+
+    this.acc.add(forceDiviedByMass);
+    //f = ma, f/m = a
   }
 
   update() {
     this.vel.add(this.acc);
     this.pos.add(this.vel);
-    this.acc.mult(0);
-    //acc 가속도 초기화하지 않고 계속 더하면 안됨, 매 프레임마다 새로 받아서 더해야 함
+    // this.accDisplay.set(this.acc);
+    this.acc.mult(0); //계속 초기화해줘야 함
+  }
+  contactEdge() {
+    if (this.pos.y >= height - 1 - this.radius - 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  edgeBounce() {
+  checkEdges() {
+    const bounce = -0.9;
     if (this.pos.x < 0 + this.radius) {
-      let delta = this.pos.x - (0 + this.radius);
-      this.pos.x += -2 * delta; //선대칭
-      this.vel.x *= -1;
+      this.pos.x -= 0 + this.radius;
+      this.pos.x *= -1;
+      this.pos.x += 0 + this.radius;
+      this.vel.x *= bounce;
     } else if (this.pos.x > width - 1 - this.radius) {
-      let delta = this.pos.x - (width - 1 - this.radius);
-      this.pos.x += -2 * delta; //선대칭
-      this.vel.x *= -1;
+      this.pos.x -= width - 1 - this.radius;
+      this.pos.x *= -1;
+      this.pos.x += width - 1 - this.radius;
+      this.vel.x *= bounce;
     }
     if (this.pos.y > height - 1 - this.radius) {
-      let delta = this.pos.y - (height - 1 - this.radius);
-      this.pos.y += -2 * delta; //선대칭
-      this.vel.y *= -1;
+      this.pos.y -= height - 1 - this.radius;
+      this.pos.y *= -1;
+      this.pos.y += height - 1 - this.radius;
+      this.vel.y *= bounce;
     }
   }
 
   display() {
+    noStroke();
+    fill(0);
     ellipse(this.pos.x, this.pos.y, 2 * this.radius);
   }
+
+  mouseMoved(mX, mY) {
+    this.isHover =
+      (this.pos.x - mX) ** 2 + (this.pos.y - mY) ** 2 <= this.rad ** 2;
+  }
+
+  mousePressed(mX, mY) {
+    if (this.isHover) {
+    }
+  }
+
+  mouseDragged(mX, mY) {
+    if (this.isDragging) {
+    }
+  }
+
+  mouseReleased() {
+    this.isDragging = false;
+  }
+  // displayVector() {
+  //   stroke('red');
+  //   line(
+  //     this.pos.x,
+  //     this.pos.y,
+  //     this.pos.x + this.vel.x * 10,
+  //     this.pos.y + this.vel.y * 10
+  //   );
+  //   stroke('lime');
+  //   line(
+  //     this.pos.x,
+  //     this.pos.y,
+  //     this.pos.x + this.accDisplay.x * 100,
+  //     this.pos.y + this.accDisplay.y * 100
+  //   );
+  // }
 }

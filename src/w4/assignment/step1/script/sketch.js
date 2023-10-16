@@ -1,41 +1,53 @@
-let moverA; //class명과 달라도 됨
-let moverB;
-let gravity;
-// let wind;
+// Original Code from: https://editor.p5js.org/natureofcode/sketches/uT9VpVvCO
+// Daniel Shiffman
+// The Nature of Code
+// Example 2-9: N-Bodies Attraction
+
+//Modified by OO-SUNG SON (spctrm404)
+
+let bodies = [];
+
+let G = 0.01;
+
+let showVector = false;
 
 function setup() {
-  setCanvasContainer('canvas', 3, 2, true);
-  background('white');
-  moverA = new Mover(width / 3, height / 3, 10);
-  moverB = new Mover((2 * width) / 3, height / 3, 1);
-  gravity = createVector(0, 0.1);
-  // wind = createVector(0.2, 0);
+  setCanvasContainer('canvas', 1, 1, true);
+  reset();
 }
 
 function draw() {
-  background('white');
+  background(255);
 
-  let gravityA = createVector(gravity.x, gravity.y);
-  gravityA.mult(moverA.mass);
-  moverA.applyForce(gravityA);
-  if (mouseIsPressed && isMouseInsideCanvas()) {
-    moverA.applyForce(wind);
+  for (let i = 0; i < 40; i++) {
+    for (let j = 0; j < 40; j++) {
+      if (i !== j) {
+        let forceForJ = bodies[i].attract(bodies[j]);
+        bodies[j].applyForce(forceForJ);
+      }
+    }
+    bodies[i].update();
+    bodies[i].display();
+    if (showVector) {
+      bodies[i].displayVectors();
+    }
   }
-  //mouseIsPressed는 내장되어있는 변수, isMouseInsideCanvas는 만들어둔 함수임
-  moverA.update();
-  moverA.checkEdges();
-  moverA.display();
-  moverA.displayVector();
+}
 
-  let gravityB = createVector(gravity.x, gravity.y);
-  gravityB.mult(moverB.mass);
-  moverB.applyForce(gravityB);
-  if (mouseIsPressed && isMouseInsideCanvas()) {
-    moverB.applyForce(wind);
+function mousePressed() {
+  if (isMouseInsideCanvas()) {
+    reset();
   }
-  //mouseIsPressed는 내장되어있는 변수, isMouseInsideCanvas는 만들어둔 함수임
-  moverB.update();
-  moverB.checkEdges();
-  moverB.display();
-  moverB.displayVector();
+}
+
+function reset() {
+  for (let i = 0; i < 40; i++) {
+    bodies[i] = new Body(random(width), random(height), random(0.1, 2));
+  }
+}
+
+function keyPressed() {
+  if (key === 's' || key === 'S') {
+    showVector = !showVector;
+  }
 }

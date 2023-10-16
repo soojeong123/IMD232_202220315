@@ -9,8 +9,6 @@ class Mover {
     this.radius = this.mass ** 0.5 * 10;
   }
 
-  mouseFollow() {}
-
   applyForce(force) {
     let forceDiviedByMass = createVector(force.x, force.y);
     forceDiviedByMass.div(this.mass);
@@ -25,46 +23,54 @@ class Mover {
     this.accDisplay.set(this.acc);
     this.acc.mult(0); //계속 초기화해줘야 함
   }
+  contactEdge() {
+    if (this.pos.y >= height - 1 - this.radius - 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   checkEdges() {
-    if (this.pos.x < 0) {
-      this.pos.x -= 0;
+    const bounce = -0.9;
+    if (this.pos.x < 0 + this.radius) {
+      this.pos.x -= 0 + this.radius;
       this.pos.x *= -1;
-      this.pos.x += 0;
-      this.vel.x *= -1;
-    } else if (this.pos.x > width - 1) {
-      this.pos.x -= width - 1;
+      this.pos.x += 0 + this.radius;
+      this.vel.x *= bounce;
+    } else if (this.pos.x > width - 1 - this.radius) {
+      this.pos.x -= width - 1 - this.radius;
       this.pos.x *= -1;
-      this.pos.x += width - 1;
-      this.vel.x *= -1;
+      this.pos.x += width - 1 - this.radius;
+      this.vel.x *= bounce;
     }
-    if (this.pos.y > height - 1) {
-      this.pos.y -= height - 1;
+    if (this.pos.y > height - 1 - this.radius) {
+      this.pos.y -= height - 1 - this.radius;
       this.pos.y *= -1;
-      this.pos.y += height - 1;
-      this.vel.y *= -1;
+      this.pos.y += height - 1 - this.radius;
+      this.vel.y *= bounce;
     }
   }
 
   display() {
     noStroke();
     fill(0);
-    ellipse(mouseX, this.pos.y, 2 * this.radius);
+    ellipse(this.pos.x, this.pos.y, 2 * this.radius);
   }
   displayVector() {
-    // stroke('red');
-    // line(
-    //   this.pos.x,
-    //   this.pos.y,
-    //   this.pos.x + this.vel.x * 10,
-    //   this.pos.y + this.vel.y * 10
-    // );
-    // stroke('lime');
-    // line(
-    //   this.pos.x,
-    //   this.pos.y,
-    //   this.pos.x + this.accDisplay.x * 100,
-    //   this.pos.y + this.accDisplay.y * 100
-    // );
+    stroke('red');
+    line(
+      this.pos.x,
+      this.pos.y,
+      this.pos.x + this.vel.x * 10,
+      this.pos.y + this.vel.y * 10
+    );
+    stroke('lime');
+    line(
+      this.pos.x,
+      this.pos.y,
+      this.pos.x + this.accDisplay.x * 100,
+      this.pos.y + this.accDisplay.y * 100
+    );
   }
 }

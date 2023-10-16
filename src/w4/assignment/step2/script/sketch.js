@@ -1,43 +1,53 @@
-let ball;
-let ball2;
+let moverA; //class명과 달라도 됨
+// let moverB;
 let gravity;
-let wind;
-let att;
+// let wind;
+let mVec;
+let pMVec;
 
 function setup() {
-  setCanvasContainer('canvas', 3, 2, true);
-  // background('salmon');
-  ball = new Mover(width / 3, 0, 10);
-  ball2 = new Mover((2 * width) / 3, 0, 10);
+  setCanvasContainer('canvas', 1, 1, true);
+  background('white');
+  moverA = new Mover(width / 2, height / 2, 10);
   gravity = createVector(0, 0.1);
-  wind = createVector(-1, 0);
-  att = new Attractor(width / 2, height / 2, 100);
+
+  mVec = createVector();
+  pMVec = createVector();
 }
 
 function draw() {
-  // let g = p5.Vector.mult(gravity, ball.mass);
-  // ball.applyForce(g);
-  // let g2 = p5.Vector.mult(gravity, ball2.mass);
-  // ball2.applyForce(g2);
-  // if (mouseIsPressed) {
-  //   ball.applyForce(wind);
-  //   ball2.applyForce(wind);
+  background('white');
+
+  let gravityA = createVector(gravity.x, gravity.y);
+  gravityA.mult(moverA.mass);
+  moverA.applyForce(gravityA);
+  // if (mouseIsPressed && isMouseInsideCanvas()) {
+  //   moverA.applyForce(wind);
   // }
+  //mouseIsPressed는 내장되어있는 변수, isMouseInsideCanvas는 만들어둔 함수임
 
-  ball.applyForce(att.attract(ball));
-  ball2.applyForce(att.attract(ball2));
+  if (moverA.contactEdge()) {
+    let c = 0.5;
+    //c= 뮤 마찰계수?, 0~1 사이의 값이어야함
+    let friction = moverA.vel.copy();
+    friction.mult(-1);
+    friction.mult(c);
+    moverA.applyForce(friction);
+  }
+  moverA.update();
+  moverA.checkEdges();
+  moverA.display();
+}
 
-  ball.update();
-  ball2.update();
-  // ball.edgeBounce();
-  // ball2.edgeBounce();
+function mouseMoved() {}
 
-  background('salmon');
-  fill('white');
+function mousePressed() {}
 
-  ball.display();
-  ball2.display();
+function mouseDragged() {}
 
-  att.display();
-  // att.set(mouseX, mouseY);
+function mouseReleased() {
+  pMVec.set(pmouseX, pmouseY);
+  mVec.set(mouseX, mouseY);
+
+  // moverA.applyForce(throwingForce);
 }
